@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat CS - Toko Zizan</title>
+  <style>
+    body {
+      margin: 0; font-family: Arial, sans-serif;
+      background: #f5f5f5; display: flex; flex-direction: column;
+      height: 97vh;
+    }
+    header {
+      background: #ff0000; color: white;
+      padding: 1rem; text-align: center;
+      font-weight: bold; font-size: 1.2rem;
+    }
+    .chat-box {
+      flex: 1; padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .msg {
+      max-width: 70%; padding: 0.6rem 1rem;
+      border-radius: 12px;
+    }
+    .cs {
+      background: #e0e0e0; align-self: flex-start;
+    }
+    .user {
+      background: #dcf8c6; align-self: flex-end;
+    }
+    form {
+      display: flex;
+      padding: 0.5rem;
+      background: #ffffff;
+      border-top: 1px solid #ddd;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.6rem 1rem;
+      margin-left: 0.5rem;
+      background: #ff0000;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>Chat dengan CS</header>
+  <div class="chat-box" id="chatBox"></div>
+  <form id="chatForm">
+    <input type="text" id="chatInput" placeholder="Ketik pesan Anda..." required />
+    <button type="submit">Kirim</button>
+  </form>
+
+  <script>
+    const SUPABASE_URL = 'https://zasaalidxxgasdlazkdl.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inphc2FhbGlkeHhnYXNkbGF6a2RsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MjI2OTYsImV4cCI6MjA2NzI5ODY5Nn0.3B51n1-lL246KGga5jhI6ntU_Xb-2vw40Ic7TEPnzEM';
+
+    const chatBox = document.getElementById('chatBox');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+
+    async function deleteOldMessages() {
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+      await fetch(`${SUPABASE_URL}/rest/v1/chat_cs?created_at=lt.${oneHourAgo}`, {
+        method: 'DELETE',
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`
+        }
+      });
+    }
+
+    async function fetchMessages() {
+      await deleteOldMessages(); // jalankan penghapusan terlebih dulu
+
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_cs?select=*&order=created_at.asc`, {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`
+        }
+      });
+      const data = await res.json();
+      chatBox.innerHTML = '';
+      data.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = 'msg ' + (msg.sender === 'user' ? 'user' : 'cs');
+        div.textContent = msg.message;
+        chatBox.appendChild(div);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    async function sendMessage(message) {
+      await fetch(`${SUPABASE_URL}/rest/v1/chat_cs`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sender: 'user', message })
+      });
+      fetchMessages();
+    }
+
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      sendMessage(msg);
+      chatInput.value = '';
+    });
+
+    setInterval(fetchMessages, 5000);
+    fetchMessages();
+  </script>
+</body>
+</html>

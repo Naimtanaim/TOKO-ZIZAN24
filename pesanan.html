@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Status Pesanan - Toko Zizan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { margin: 0; background: #f9fafb; color: #333; }
+    header {
+      background: #ffcc00; color: white;
+      padding: 1rem; text-align: center;
+      font-size: 1.6rem; font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .order-list { padding: 1rem; }
+    .order-card {
+      background: white;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .order-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: #007bff;
+    }
+    .order-card p {
+      margin: 0.2rem 0;
+      font-size: 0.95rem;
+    }
+    .status {
+      font-weight: bold;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+    .waiting { background: #fff3cd; color: #856404; }
+    .processing { background: #d1ecf1; color: #0c5460; }
+    .shipped { background: #cce5ff; color: #004085; }
+    .done { background: #d4edda; color: #155724; }
+    
+
+
+/* Responsif untuk layar kecil seperti HP */
+@media (max-width: 480px) {
+  .btn-kembali {
+    font-size: 14px;
+    padding: 10px 16px;
+    bottom: 12px;
+    left: 270px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+
+<header>Status Pesanan</header>
+<div class="order-list" id="order-list">Memuat pesanan...</div>
+
+<script>
+const SUPABASE_URL = 'https://zasaalidxxgasdlazkdl.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inphc2FhbGlkeHhnYXNkbGF6a2RsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MjI2OTYsImV4cCI6MjA2NzI5ODY5Nn0.3B51n1-lL246KGga5jhI6ntU_Xb-2vw40Ic7TEPnzEM';
+
+async function loadOrders() {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?select=*`, {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`
+    }
+  });
+  const orders = await res.json();
+  renderOrders(orders);
+}
+
+function renderOrders(orders) {
+  const list = document.getElementById('order-list');
+  if (orders.length === 0) {
+    list.innerHTML = '<p>Tidak ada pesanan ditemukan.</p>';
+    return;
+  }
+
+  list.innerHTML = '';
+  orders.reverse().forEach(order => {
+    const card = document.createElement('div');
+    card.className = 'order-card';
+    const status = order.status || 'Menunggu';
+
+    let statusClass = 'waiting';
+    let statusText = '🕒 Menunggu';
+    if (status === 'Diproses') {
+      statusClass = 'processing'; statusText = '🔧 Diproses';
+    } else if (status === 'Dikirim') {
+      statusClass = 'shipped'; statusText = '🚚 Dikirim';
+    } else if (status === 'Selesai') {
+      statusClass = 'done'; statusText = '✅ Selesai';
+    }
+
+    card.innerHTML = `
+      <h3>${order.customer_name} (${order.customer_phone})</h3>
+      <p><strong>Alamat:</strong> ${order.customer_alamat})</p>
+      <p><strong>Metode:</strong> ${order.payment_method}</p>
+      <p><strong>Total:</strong> Rp${order.total.toLocaleString()}</p>
+      <div class="status ${statusClass}">${statusText}</div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+loadOrders();
+</script>
+
+</body>
+</html>
