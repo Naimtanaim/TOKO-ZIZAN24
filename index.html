@@ -277,62 +277,53 @@
   const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3');
   audio.play();
 }
-    function renderCart() {
-  const el = document.getElementById('cart-items');
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  el.innerHTML = '';
-  cart.forEach((item, idx) => {
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    div.innerHTML = `
-      <div class="cart-item-name">${item.name}<br><small>Rp${item.price.toLocaleString()} x ${item.qty}</small></div>
-      <div class="qty-btns">
-        <button onclick="decreaseQty(${idx})">−</button>
-        <button onclick="increaseQty(${idx})">＋</button>
-        <button class="delete" onclick="removeItem(${idx})">🗑️</button>
-      </div>
-    `;
-    el.appendChild(div);
+    async function submitOrder(e) {
+  e.preventDefault();
+
+  const name = document.getElementById('customer_name').value.trim();
+  const phone = document.getElementById('customer_phone').value.trim();
+  const alamat = document.getElementById('customer_alamat').value.trim();
+  const payment_method = document.getElementById('payment_method').value;
+  const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+
+  if (!name || !phone || !alamat || !payment_method || cart.length === 0) {
+    return alert('Lengkapi data & keranjang!');
+  }
+
+  const data = {
+    customer_name: name,
+    customer_phone: phone,
+    customer_alamat: alamat,
+    items: cart,
+    total,
+    payment_method
+  };
+
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
   });
-  document.getElementById('total-harga').textContent = total.toLocaleString();
-  updateCartCount(); // Tambahkan ini di akhir renderCart
+
+  if (!res.ok) return alert('Gagal kirim pesanan');
+
+  alert('✅ Pesanan berhasil!');
+
+  // ⛔ FIX: Kosongkan & render ulang
+  cart = [];
+  renderCart();
+  updateCartCount();
+  closeCart();
+
+  // Reset form juga
+  e.target.reset();
+  document.getElementById("qrisImage").style.display = "none";
 }
 
-
-    function increaseQty(i) { cart[i].qty++; renderCart(); }
-    function decreaseQty(i) { if (cart[i].qty > 1) cart[i].qty--; else cart.splice(i, 1); renderCart(); }
-    function removeItem(i) { cart.splice(i, 1); renderCart(); }
-    function openCart() { renderCart(); document.getElementById('cart-modal').style.display = 'flex'; }
-    function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
-
-    function munculkanForm() {
-      const metode = document.getElementById("payment_method").value;
-      document.getElementById("qrisImage").style.display = metode === "QRIS" ? "block" : "none";
-    }
-
-    async function submitOrder(e) {
-      e.preventDefault();
-      const name = document.getElementById('customer_name').value.trim();
-      const phone = document.getElementById('customer_phone').value.trim();
-      const alamat = document.getElementById('customer_alamat').value.trim();
-      const payment_method = document.getElementById('payment_method').value;
-      const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-      if (!name || !phone || !alamat || !payment_method || cart.length === 0) return alert('Lengkapi data & keranjang!');
-      const data = { customer_name: name, customer_phone: phone, customer_alamat: alamat, items: cart, total, payment_method };
-
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-        method: 'POST',
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-      if (!res.ok) return alert('Gagal kirim pesanan');
-      alert('✅ Pesanan berhasil!');
-      cart = []; closeCart();
-    }
 
     function filterByCategory(cat) {
       const list = cat === 'All' ? allProducts : allProducts.filter(p => p.category === cat);
