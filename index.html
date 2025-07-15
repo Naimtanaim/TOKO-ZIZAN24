@@ -263,6 +263,11 @@
   el.textContent = count;
 }
 
+    function openCart() {
+  renderCart();
+  document.getElementById('cart-modal').style.display = 'flex';
+}
+
 
     function addToCart(p) {
   const existing = cart.find(i => i.name === p.name);
