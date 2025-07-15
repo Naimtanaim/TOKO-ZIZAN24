@@ -441,7 +441,7 @@
     });
     const promos = await res.json();
     if (promos.length > 0) {
-      document.querySelector('.promo-banner').textContent = '🎉 ' + promos[0].text;
+      document.querySelector('.promo-banner').textContent = ' ' + promos[0].text;
     }
   }
 
