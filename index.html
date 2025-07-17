@@ -204,12 +204,12 @@
     <button onclick="document.getElementById('popup-promo').style.display='none'" style="margin-top:1rem;padding:0.5rem 1rem;background:#ff6f00;color:white;border:none;border-radius:8px;cursor:pointer;">Tutup</button>
   </div>
 
-  <div id="category-select-container">
-    <label for="category-select">Kategori:</label>
-    <select id="category-select" onchange="filterByCategory(this.value)">
-      <option value="All">Semua</option>
-    </select>
-  </div>
+  <input type="text" id="searchInput" placeholder="Cari produk..." />
+<select id="kategoriSelect">
+  <option value="">Semua Kategori</option>
+</select>
+<div id="produk-container" class="produk-grid"></div>
+
 
   <h2 style="padding-left:1rem; color:#e91e63;">🔥 Produk Promo</h2>
   <div class="container" id="promo-list"></div>
