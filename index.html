@@ -46,6 +46,20 @@
   font-weight: bold;
   animation: pop 0.3s ease;
 }
+.produk-card {
+  min-height: 300px; /* atau sesuai tinggi ideal */
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+@media (max-width: 480px) {
+  .produk-card {
+    min-height: 330px;
+  }
+}
+
 
 @keyframes pop {
   0% { transform: scale(0.5); opacity: 0; }
