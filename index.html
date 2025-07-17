@@ -204,12 +204,15 @@
     <button onclick="document.getElementById('popup-promo').style.display='none'" style="margin-top:1rem;padding:0.5rem 1rem;background:#ff6f00;color:white;border:none;border-radius:8px;cursor:pointer;">Tutup</button>
   </div>
 
-  <div id="category-select-container">
-    <label for="category-select">Kategori:</label>
-    <select id="category-select" onchange="filterByCategory(this.value)">
-      <option value="All">Semua</option>
-    </select>
-  </div>
+  <div id="category-select-container" style="display:flex; gap:10px; margin-bottom:10px;">
+  <label for="category-select">Kategori:</label>
+  <select id="category-select" onchange="filterProducts()" style="padding: 8px;">
+    <option value="All">Semua</option>
+  </select>
+
+  <input type="text" id="search-input" placeholder="Cari nama produk..." oninput="filterProducts()" style="flex:1; padding:8px; border-radius:6px; border:1px solid #ccc;">
+</div>
+
 
   <h2 style="padding-left:1rem; color:#e91e63;">🔥 Produk Promo</h2>
   <div class="container" id="promo-list"></div>
@@ -369,10 +372,23 @@
     document.getElementById("qrisImage").style.display = "none";
   }
 
-  function filterByCategory(cat) {
-    const list = cat === 'All' ? allProducts : allProducts.filter(p => p.category === cat);
-    renderProducts(list);
+  <script>
+  let allProducts = []; // pastikan variabel ini sudah ada di awal
+
+  function filterProducts() {
+    const category = document.getElementById('category-select').value;
+    const keyword = document.getElementById('search-input').value.toLowerCase();
+
+    const filtered = allProducts.filter(p => {
+      const matchCategory = category === 'All' || p.category === category;
+      const matchName = p.name.toLowerCase().includes(keyword);
+      return matchCategory && matchName;
+    });
+
+    renderProducts(filtered);
   }
+</script>
+
 
   function populateCategoryFilter(prods) {
     const sel = document.getElementById('category-select');
