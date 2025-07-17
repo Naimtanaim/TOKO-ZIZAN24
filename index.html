@@ -387,7 +387,6 @@
 
     renderProducts(filtered);
   }
-</script>
 
 
   function populateCategoryFilter(prods) {
@@ -416,6 +415,18 @@
       el.appendChild(div);
     });
   }
+   async function muatProduk() {
+  const { data, error } = await supabase.from('products').select('*');
+  if (error) {
+    alert("Gagal ambil produk!");
+    return;
+  }
+
+  allProducts = data;
+  renderProducts(data);
+  isiKategoriUnik(data); // kalau pakai kategori dinamis
+}
+ 
 
   function renderPromoProducts(list) {
     const el = document.getElementById('promo-list');
