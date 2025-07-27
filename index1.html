@@ -16,43 +16,6 @@
       text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       position: sticky; top: 0; z-index: 1000;
     }
-    .cart-button {
-  position: relative;
-  background: none;
-  border: none;
-  font-size: 0.9rem;
-  color: #444;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.cart-button:hover {
-  transform: scale(1.05);
-}
-
-.cart-badge {
-  position: absolute;
-  top: -4px;
-  right: -8px;
-  background: #e53935;
-  color: white;
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 999px;
-  font-weight: bold;
-  animation: pop 0.3s ease;
-}
-
-@keyframes pop {
-  0% { transform: scale(0.5); opacity: 0; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); }
-}
-
 
     .promo-banner {
       background: linear-gradient(to right, #ffe082, #fff59d);
@@ -80,9 +43,11 @@
     }
 
     .product {
+      position: relative; /* penting agar tombol tambah bisa posisi absolut */
       background: #ffffff; border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      padding: 0.8rem; border: 1px solid #eee;
+      padding: 0.8rem 0.8rem 1.6rem 0.8rem; /* ruang bawah lebih untuk konten */
+      border: 1px solid #eee;
     }
     .product img {
       width: 100%; height: 140px;
@@ -96,11 +61,29 @@
       color: #e53935; font-weight: bold;
       margin-bottom: 0.7rem;
     }
+    
+    /* Tombol tambah kecil bulat pojok kanan atas */
     .product button {
-      background: #fdd835; color: #212121;
-      border: none; padding: 0.5rem 0.8rem;
-      border-radius: 8px; cursor: pointer;
-      font-weight: 600; width: 90%;
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      padding: 0;
+      background: #fdd835;
+      color: #212121;
+      border: none;
+      font-weight: 700;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 28px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+    }
+    .product button:hover {
+      background-color: #fbc02d;
     }
 
     .modal {
@@ -115,6 +98,7 @@
       max-width: 400px; max-height: 100vh;
       overflow-y: auto;
     }
+    
 
     .cart-item {
       background: #f1f1f1; padding: 0.7rem;
@@ -156,7 +140,8 @@
       font-size: 0.9rem;
       color: #444;
       display: flex; flex-direction: column;
-      align-items: center; gap: 4px;
+      align-items: center;
+      gap: 4px;
       cursor: pointer;
     }
 
@@ -190,25 +175,66 @@
       max-width: 320px;
       text-align: center;
     }
+    .cart-button {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.cart-button:hover {
+  transform: scale(1.05);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  background: #e53935;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-weight: bold;
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+}
+
   </style>
 </head>
 <body>
   <header>Toko Zizan</header>
 
   <div class="promo-banner">🎉 PROMO SPESIAL HARI INI - Gratis Ongkir untuk Pembelian di Atas Rp50.000!</div>
-<div style="padding: 1rem;">
-  <input
-    type="text"
-    id="search-input"
-    placeholder="🔍 Cari produk atau kategori..."
-    oninput="filterProducts()"
-    style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;"
-  />
-</div>
+
+  <div style="padding: 1rem;">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="🔍 Cari produk atau kategori..."
+      oninput="filterProducts()"
+      style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px;"
+    />
+  </div>
+
   <!-- Popup Promo -->
   <div id="popup-promo">
     <h3 style="color:#ff6f00;">🎁 TOKO ZIZAN!</h3>
-    <p><strong>SELAMAT DATANG</strong></p>belanjan di toko kami</p>
+    <p><strong>SELAMAT DATANG</strong></p>
+    <p>Belanja di toko kami</p>
     <p><strong>Terimakasih</strong></p>
     <button onclick="document.getElementById('popup-promo').style.display='none'" style="margin-top:1rem;padding:0.5rem 1rem;background:#ff6f00;color:white;border:none;border-radius:8px;cursor:pointer;">Tutup</button>
   </div>
@@ -219,6 +245,7 @@
       <option value="All">Semua</option>
     </select>
   </div>
+
   <div class="container" id="promo-list"></div>
 
   <div class="container" id="product-list"></div>
@@ -239,7 +266,7 @@
         </select>
 
         <div id="qrisImage">
-          <img src="qris.png" alt="QRIS">
+          <img src="qris.png" alt="QRIS" />
           <p style="margin-top: 0.5rem; font-size: 14px;">Scan QR Toko Zizan</p>
         </div>
 
@@ -253,206 +280,197 @@
     </div>
   </div>
 
-  <script>
-    const SUPABASE_URL = 'https://zasaalidxxgasdlazkdl.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inphc2FhbGlkeHhnYXNkbGF6a2RsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MjI2OTYsImV4cCI6MjA2NzI5ODY5Nn0.3B51n1-lL246KGga5jhI6ntU_Xb-2vw40Ic7TEPnzEM';
-    let allProducts = [], cart = [];
+<script>
+  const SUPABASE_URL = 'https://zasaalidxxgasdlazkdl.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inphc2FhbGlkeHhnYXNkbGF6a2RsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3MjI2OTYsImV4cCI6MjA2NzI5ODY5Nn0.3B51n1-lL246KGga5jhI6ntU_Xb-2vw40Ic7TEPnzEM';
+  let allProducts = [], cart = [];
 
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        document.getElementById("popup-promo").style.display = "block";
-      }, 2000);
-    });
-
-    function updateCartCount() {
-  const el = document.getElementById('cart-count');
-  const count = cart.reduce((total, item) => total + item.qty, 0);
-  el.textContent = count;
-
-  // Efek animasi
-  el.classList.remove('pop');
-  void el.offsetWidth; // Trigger reflow untuk reset animasi
-  el.classList.add('cart-badge');
-}
-
-    function addToCart(p) {
-  const existing = cart.find(i => i.name === p.name);
-  if (existing) existing.qty++;
-  else cart.push({ ...p, qty: 1 });
-
-  updateCartCount();
-  const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3');
-  audio.play();
-}
-    function renderCart() {
-  const el = document.getElementById('cart-items');
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  el.innerHTML = '';
-  cart.forEach((item, idx) => {
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    div.innerHTML = `
-      <div class="cart-item-name">${item.name}<br><small>Rp${item.price.toLocaleString()} x ${item.qty}</small></div>
-      <div class="qty-btns">
-        <button onclick="decreaseQty(${idx})">−</button>
-        <button onclick="increaseQty(${idx})">＋</button>
-        <button class="delete" onclick="removeItem(${idx})">🗑️</button>
-      </div>
-    `;
-    el.appendChild(div);
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      document.getElementById("popup-promo").style.display = "block";
+    }, 2000);
   });
-  document.getElementById('total-harga').textContent = total.toLocaleString();
-  updateCartCount(); // Tambahkan ini di akhir renderCart
-}
 
-
-    function increaseQty(i) { cart[i].qty++; renderCart(); }
-    function decreaseQty(i) { if (cart[i].qty > 1) cart[i].qty--; else cart.splice(i, 1); renderCart(); }
-    function removeItem(i) { cart.splice(i, 1); renderCart(); }
-    function openCart() { renderCart(); document.getElementById('cart-modal').style.display = 'flex'; }
-    function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
-
-    function munculkanForm() {
-      const metode = document.getElementById("payment_method").value;
-      document.getElementById("qrisImage").style.display = metode === "QRIS" ? "block" : "none";
-    }
-
-    async function submitOrder(e) {
-  e.preventDefault();
-
-  const name = document.getElementById('customer_name').value.trim();
-  const phone = document.getElementById('customer_phone').value.trim();
-  const alamat = document.getElementById('customer_alamat').value.trim();
-  const payment_method = document.getElementById('payment_method').value;
-  const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
-
-  if (!name || !phone || !alamat || !payment_method || cart.length === 0) {
-    return alert('Lengkapi data & keranjang!');
+  function updateCartCount() {
+    const el = document.getElementById('cart-count');
+    const count = cart.reduce((total, item) => total + item.qty, 0);
+    el.textContent = count;
   }
 
-  const data = {
-    customer_name: name,
-    customer_phone: phone,
-    customer_alamat: alamat,
-    items: cart,
-    total,
-    payment_method
-  };
+  function addToCart(p) {
+    const existing = cart.find(i => i.name === p.name);
+    if (existing) existing.qty++;
+    else cart.push({ ...p, qty: 1 });
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-    method: 'POST',
-    headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  });
+    updateCartCount();
+    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-interface-click-1126.mp3');
+    audio.play();
+  }
 
-  if (!res.ok) return alert('Gagal kirim pesanan');
+  function renderCart() {
+    const el = document.getElementById('cart-items');
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    el.innerHTML = '';
+    cart.forEach((item, idx) => {
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <div class="cart-item-name">${item.name}<br><small>Rp${item.price.toLocaleString()} x ${item.qty}</small></div>
+        <div class="qty-btns">
+          <button onclick="decreaseQty(${idx})">−</button>
+          <button onclick="increaseQty(${idx})">＋</button>
+          <button class="delete" onclick="removeItem(${idx})">🗑️</button>
+        </div>
+      `;
+      el.appendChild(div);
+    });
+    document.getElementById('total-harga').textContent = total.toLocaleString();
+    updateCartCount();
+  }
 
-  alert('✅ Pesanan berhasil!');
+  function increaseQty(i) { cart[i].qty++; renderCart(); }
+  function decreaseQty(i) { if (cart[i].qty > 1) cart[i].qty--; else cart.splice(i, 1); renderCart(); }
+  function removeItem(i) { cart.splice(i, 1); renderCart(); }
+  function openCart() { renderCart(); document.getElementById('cart-modal').style.display = 'flex'; }
+  function closeCart() { document.getElementById('cart-modal').style.display = 'none'; }
 
-  // ⛔ FIX: Kosongkan & render ulang
-  cart = [];
-  renderCart();
-  updateCartCount();
-  closeCart();
+  function munculkanForm() {
+    const metode = document.getElementById("payment_method").value;
+    document.getElementById("qrisImage").style.display = metode === "QRIS" ? "block" : "none";
+  }
 
-  // Reset form juga
-  e.target.reset();
-  document.getElementById("qrisImage").style.display = "none";
-}
+  async function submitOrder(e) {
+    e.preventDefault();
 
+    const name = document.getElementById('customer_name').value.trim();
+    const phone = document.getElementById('customer_phone').value.trim();
+    const alamat = document.getElementById('customer_alamat').value.trim();
+    const payment_method = document.getElementById('payment_method').value;
+    const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
 
-    function filterByCategory(cat) {
-      const list = cat === 'All' ? allProducts : allProducts.filter(p => p.category === cat);
-      renderProducts(list);
+    if (!name || !phone || !alamat || !payment_method || cart.length === 0) {
+      return alert('Lengkapi data & keranjang!');
     }
 
-    function populateCategoryFilter(prods) {
-      const sel = document.getElementById('category-select');
-      const cats = [...new Set(prods.map(p => p.category).filter(Boolean))];
-      cats.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat; opt.textContent = cat;
-        sel.appendChild(opt);
-      });
-    }
+    const data = {
+      customer_name: name,
+      customer_phone: phone,
+      customer_alamat: alamat,
+      items: cart,
+      total,
+      payment_method
+    };
 
-    function renderProducts(list) {
-      const el = document.getElementById('product-list');
-      el.innerHTML = '';
-      list.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'product';
-        div.innerHTML = `
-          <img src="${p.image_url}" />
-          <div class="product-name">${p.name}</div>
-          <div class="price">Rp${p.price.toLocaleString()}</div>
-          <button onclick='addToCart(${JSON.stringify(p)})'>Tambah</button>
-        `;
-        el.appendChild(div);
-      });
-    }
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
 
-    function renderPromoProducts(list) {
-      const el = document.getElementById('promo-list');
-      const promos = list.filter(p => p.is_promo === true);
-      el.innerHTML = '';
-      promos.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'product';
-        div.innerHTML = `
-          <img src="${p.image_url}" />
-          <div class="product-name">${p.name}</div>
-          <div class="price">Rp${p.price.toLocaleString()}</div>
-          <button onclick='addToCart(${JSON.stringify(p)})'>Tambah</button>
-        `;
-        el.appendChild(div);
-      });
-    }
+    if (!res.ok) return alert('Gagal kirim pesanan');
 
-    async function fetchProducts() {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`
-        }
-      });
-      const prods = await res.json();
-      allProducts = prods;
-      populateCategoryFilter(prods);
-      renderProducts(prods);
-      renderPromoProducts(prods);
-    }
+    alert('✅ Pesanan berhasil!');
 
-    async function loadPromoBanner() {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/promotions?select=text&limit=1`, {
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`
-        }
-      });
-      const promos = await res.json();
-      if (promos.length > 0) {
-        document.querySelector('.promo-banner').textContent = ' ' + promos[0].text;
+    cart = [];
+    renderCart();
+    updateCartCount();
+    closeCart();
+
+    e.target.reset();
+    document.getElementById("qrisImage").style.display = "none";
+  }
+
+  function filterByCategory(cat) {
+    const list = cat === 'All' ? allProducts : allProducts.filter(p => p.category === cat);
+    renderProducts(list);
+  }
+
+  function populateCategoryFilter(prods) {
+    const sel = document.getElementById('category-select');
+    const cats = [...new Set(prods.map(p => p.category).filter(Boolean))];
+    cats.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat; opt.textContent = cat;
+      sel.appendChild(opt);
+    });
+  }
+
+  function renderProducts(list) {
+    const el = document.getElementById('product-list');
+    el.innerHTML = '';
+    list.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.innerHTML = `
+        <img src="${p.image_url}" />
+        <div class="product-name">${p.name}</div>
+        <div class="price">Rp${p.price.toLocaleString()}</div>
+        <button onclick='addToCart(${JSON.stringify(p)})' title="Tambah ke keranjang">+</button>
+      `;
+      el.appendChild(div);
+    });
+  }
+
+  function renderPromoProducts(list) {
+    const el = document.getElementById('promo-list');
+    const promos = list.filter(p => p.is_promo === true);
+    el.innerHTML = '';
+    promos.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'product';
+      div.innerHTML = `
+        <img src="${p.image_url}" />
+        <div class="product-name">${p.name}</div>
+        <div class="price">Rp${p.price.toLocaleString()}</div>
+        <button onclick='addToCart(${JSON.stringify(p)})' title="Tambah ke keranjang">+</button>
+      `;
+      el.appendChild(div);
+    });
+  }
+
+  async function fetchProducts() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*`, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
       }
+    });
+    const prods = await res.json();
+    allProducts = prods;
+    populateCategoryFilter(prods);
+    renderProducts(prods);
+    renderPromoProducts(prods);
+  }
+
+  async function loadPromoBanner() {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/promotions?select=text&limit=1`, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    const promos = await res.json();
+    if (promos.length > 0) {
+      document.querySelector('.promo-banner').textContent = ' ' + promos[0].text;
     }
+  }
 
-    fetchProducts();
-    loadPromoBanner();
-  
-function filterProducts() {
-  const keyword = document.getElementById('search-input').value.toLowerCase();
-  const filtered = allProducts.filter(p => {
-    const name = p.name?.toLowerCase() || '';
-    const category = p.category?.toLowerCase() || '';
-    return name.includes(keyword) || category.includes(keyword);
-  });
-  renderProducts(filtered);
-}
+  fetchProducts();
+  loadPromoBanner();
 
+  function filterProducts() {
+    const keyword = document.getElementById('search-input').value.toLowerCase();
+    const filtered = allProducts.filter(p => {
+      const name = p.name?.toLowerCase() || '';
+      const category = p.category?.toLowerCase() || '';
+      return name.includes(keyword) || category.includes(keyword);
+    });
+    renderProducts(filtered);
+  }
 </script>
 
   <div class="floating-cs" onclick="window.open('https://wa.me/6282295307091','_blank')">
@@ -461,19 +479,18 @@ function filterProducts() {
 
   <div class="bottom-nav">
     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-      <img src="https://img.icons8.com/ios-glyphs/24/home.png"/>
-      <span>Beranda</span>
+      <img src="https://img.icons8.com/ios-glyphs/24/000000/home.png" />
+      Home
+    </button>
+        <button onclick="window.location.href='pesanan.html'">
+      <img src="https://img.icons8.com/ios-filled/24/order-history.png"/>
+      <span>Pesanan</span>
     </button>
    <button onclick="openCart()" class="cart-button">
   <img src="https://img.icons8.com/ios-filled/24/shopping-cart.png"/>
   <span>Keranjang</span>
   <span id="cart-count" class="cart-badge">0</span>
 </button>
-
-    <button onclick="window.location.href='pesanan.html'">
-      <img src="https://img.icons8.com/ios-filled/24/order-history.png"/>
-      <span>Pesanan</span>
-    </button>
     <button onclick="window.location.href='pesaninbok.html'">
       <img src="https://img.icons8.com/ios-filled/24/customer-support.png"/>
       <span>CS</span>
